@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.version      = "0.1.0"
   s.summary      = "Conekta"
 
-  s.homepage     = "http://EXAMPLE/Conekta"
+  s.homepage     = "https://www.conekta.com"
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -30,5 +30,6 @@ Pod::Spec.new do |s|
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
+  s.swift_version = "4.1"
 
 end

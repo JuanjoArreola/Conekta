@@ -7,13 +7,11 @@ class ConektaTests: XCTestCase {
     func testGetToken() {
         let expectation = self.expectation(description: "collect")
         
-        guard let conekta = Conekta(publicKey: "") else {
-            XCTFail()
-            return
-        }
+        let conekta = Conekta(publicKey: "key_DSUNVu8YgECm6ZyskQoFDoQ")!
+        
         let card = Card(number: "4111111111111111", name: "test", cvc: "111", month: "11", year: "2020")
         conekta.collectDevice(view: UIView())
-        try? conekta.getToken(for: card) { (token, error) in
+        conekta.getToken(for: card) { (token, error) in
             XCTAssertNil(error)
             XCTAssertNotNil(token)
             expectation.fulfill()
@@ -31,7 +29,7 @@ class ConektaTests: XCTestCase {
         }
         let card = Card(number: "4000000000000002", name: "test", cvc: "111", month: "11", year: "2020")
         conekta.collectDevice(view: UIView())
-        try? conekta.getToken(for: card) { (token, error) in
+        conekta.getToken(for: card) { (token, error) in
             XCTAssertNil(token)
             XCTAssertNotNil(error)
             expectation.fulfill()

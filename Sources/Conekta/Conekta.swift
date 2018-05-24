@@ -47,7 +47,8 @@ public class Conekta {
         view.addSubview(webView)
     }
     
-    public func getToken(for card: Card, completion: @escaping (Token?, Error?) -> Void) throws {
+    @discardableResult
+    public func getToken(for card: Card, completion: @escaping (Token?, Error?) -> Void) -> URLSessionTask? {
         let url = URL(string: baseURI + "/tokens")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -56,8 +57,16 @@ public class Conekta {
         request.addValue("application/vnd.conekta-v0.3.0+json", forHTTPHeaderField: "Accept")
         request.addValue("{\"agent\":\"Conekta Conekta iOS SDK\"}", forHTTPHeaderField: "Conekta-Client-User-Agent")
         
-        request.httpBody = try JSONEncoder().encode(["card": card])
-        
+        do {
+            request.httpBody = try JSONEncoder().encode(["card": card])
+            return sendRequest(request, completion: completion)
+        } catch {
+            DispatchQueue.main.async { completion(nil, error) }
+        }
+        return nil
+    }
+    
+    func sendRequest(_ request: URLRequest, completion: @escaping (Token?, Error?) -> Void) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
                 if let error = error {
@@ -67,14 +76,15 @@ public class Conekta {
                         throw error
                     }
                     let token = try JSONDecoder().decode(Token.self, from: data)
-                    completion(token, nil)
+                    DispatchQueue.main.async { completion(token, nil) }
                 } else {
                     throw ConektaError.invalidResponse
                 }
             } catch {
-                completion(nil, error)
+                DispatchQueue.main.async { completion(nil, error) }
             }
         }
         task.resume()
+        return task
     }
 }

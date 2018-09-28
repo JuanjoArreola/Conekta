@@ -19,7 +19,7 @@ public class ConektaTokenError: Decodable, Error {
     }
 }
 
-public class Conekta {
+public class ConektaServer {
     
     private let scriptURL = URL(string: "https://conektaapi.s3.amazonaws.com/v0.5.0/js/conekta.js")!
     private let baseURI = "https://api.conekta.io"

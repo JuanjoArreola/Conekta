@@ -19,7 +19,7 @@ public class ConektaTokenError: Decodable, Error {
     }
 }
 
-public class Conekta {
+public class ConektaServer {
     private let baseURI = "https://api.conekta.io"
     let publicKey: String
     let base64PublicKey: String

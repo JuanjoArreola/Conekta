@@ -7,7 +7,7 @@ class ConektaTests: XCTestCase {
     func testGetToken() {
         let expectation = self.expectation(description: "collect")
         
-        let conekta = Conekta(publicKey: "")!
+        let conekta = ConektaServer(publicKey: "")!
         
         let card = Card(number: "4111111111111111", name: "test", cvc: "111", month: "11", year: "2020")
         conekta.collectDevice(view: UIView())
@@ -23,7 +23,7 @@ class ConektaTests: XCTestCase {
     func testInvalidCard() {
         let expectation = self.expectation(description: "invalid")
         
-        guard let conekta = Conekta(publicKey: "") else {
+        guard let conekta = ConektaServer(publicKey: "") else {
             XCTFail()
             return
         }

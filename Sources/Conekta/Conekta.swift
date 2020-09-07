@@ -19,9 +19,7 @@ public class ConektaTokenError: Decodable, Error {
     }
 }
 
-public class ConektaServer {
-    
-    private let scriptURL = URL(string: "https://conektaapi.s3.amazonaws.com/v0.5.0/js/conekta.js")!
+public class Conekta {
     private let baseURI = "https://api.conekta.io"
     let publicKey: String
     let base64PublicKey: String
@@ -30,18 +28,19 @@ public class ConektaServer {
         self.publicKey = publicKey
         
         guard let data = publicKey.data(using: .utf8),
-              let base = String(data: data.base64EncodedData(options: .lineLength64Characters), encoding: .utf8) else {
+              let base = String(data: data.base64EncodedData(options: .lineLength64Characters),
+                                encoding: .utf8) else {
             return nil
         }
         base64PublicKey = base
     }
     
-    private func deviceFingerprint() -> String {
+    private var deviceFingerprint: String {
         return UIDevice.current.identifierForVendor?.uuidString.replacingOccurrences(of: "-", with: "") ?? ""
     }
     
     public func collectDevice(view: UIView) {
-        let html = "<html style=\"background: blue;\"><head></head><body><script type=\"text/javascript\" src=\"https://conektaapi.s3.amazonaws.com/v0.5.0/js/conekta.js\" data-conekta-public-key=\"\(publicKey)\" data-conekta-session-id=\"\(deviceFingerprint())\"></script></body></html>"
+        let html = "<html style=\"background: blue;\"><head></head><body><script type=\"text/javascript\" src=\"https://conektaapi.s3.amazonaws.com/v0.5.0/js/conekta.js\" data-conekta-public-key=\"\(publicKey)\" data-conekta-session-id=\"\(deviceFingerprint)\"></script></body></html>"
         let webView = WKWebView(frame: CGRect.zero)
         webView.loadHTMLString(html, baseURL: nil)
         view.addSubview(webView)
@@ -66,7 +65,7 @@ public class ConektaServer {
         return nil
     }
     
-    func sendRequest(_ request: URLRequest, completion: @escaping (Token?, Error?) -> Void) -> URLSessionTask {
+    private func sendRequest(_ request: URLRequest, completion: @escaping (Token?, Error?) -> Void) -> URLSessionTask {
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             do {
                 if let error = error {
